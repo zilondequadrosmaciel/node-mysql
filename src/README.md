@@ -8,3 +8,11 @@ mysql -u root -proot
 
 \q
 exit
+
+
+## update at project
+git status
+git add .
+git commit -m "alter cors"
+git push origin master 
+
