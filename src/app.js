@@ -20,7 +20,8 @@ app.get("/ping", async (req, res) => {
 });
 
 app.get("/create", async (req, res) => {
-    const result = await pool.query('INSERT INTO user (NAME) VALUES ("john doe")');
+    const { name } = req.body;
+    const result = await pool.query('INSERT INTO user (NAME) VALUES (?)', [name]);
     res.json(result);
 });
 
