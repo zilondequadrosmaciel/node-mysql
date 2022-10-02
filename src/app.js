@@ -10,15 +10,15 @@ app.use(cors({ origin: ['http://localhost:5173'], }))
 
 
 
-app.get("/", async (req, res) => {
+app.get("/", async (_req, res) => {
     const [row] = await pool.query('SELECT * FROM user');
-    res.json(row)
+    res.json(row);
 });
 
-app.get("/ping", async (req, res) => {
-    const [result] = await pool.query(`SELECT "hello world" as Result`)
+app.get("/ping", async (_req, res) => {
+    const [result] = await pool.query(`SELECT "hello world" as Result`);
 
-    res.json(result[0])
+    res.json(result[0]);
 });
 
 app.post("/create", async (req, res) => {
@@ -27,6 +27,17 @@ app.post("/create", async (req, res) => {
     res.json(result);
 });
 
+app.get("/products", async (_req, res) => {
+    const [row] = await pool.query('SELECT * FROM product');
+    res.json(row);
+})
+
+app.post("/create-product", async (req, res) => {
+    const { title, description, image } = req.body;
+    const result = await pool.query('INSERT INTO product (TITLE, DESCRIPTION, IMAGE) VALUES (?)',
+        [title, description, image]);
+    res.json(result);
+});
 
 app.listen(PORT);
 
