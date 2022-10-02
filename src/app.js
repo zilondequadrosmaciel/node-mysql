@@ -34,8 +34,8 @@ app.get("/products", async (_req, res) => {
 
 app.post("/create-product", async (req, res) => {
     const { title, description, image } = req.body;
-    const result = await pool.query("INSERT INTO product ('TITLE', 'DESCRIPTION', 'IMAGE') VALUES (?)",
-        [title, description, image]);
+    const sql = 'INSERT INTO product (TITLE, DESCRIPTION, IMAGE) VALUES (?, ?, ?)';
+    const result = await pool.query(sql, [title, description, image]);
     res.json(result);
 });
 
