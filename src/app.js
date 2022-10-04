@@ -47,10 +47,10 @@ app.get("/products", async (_req, res) => {
     const [row] = await pool.query('SELECT * FROM product');
     res.json(row);
 })
-
+//  , upload.single("file"),
 app.post("/create-product", upload.single("file"), async (req, res) => {
-    const { image } = req.file.filename;
-    const { title, description } = req.body;
+    // const { image } = req.file.filename;
+    const { title, description, image } = req.body;
     const sql = 'INSERT INTO product (TITLE, DESCRIPTION, IMAGE) VALUES (?, ?, ?)';
     const result = await pool.query(sql, [title, description, image]);
     res.json(result);
