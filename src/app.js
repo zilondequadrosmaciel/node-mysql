@@ -62,10 +62,10 @@ app.post("/create-product", upload.single("image"), async (req, res) => {
     res.json(result);
 });
 
-app.delete("/delete-product/:id", (req, res) => {
+app.delete("/delete-product/:id", async (req, res) => {
     const id = req.params.id;
-    const query = "DELETE FROM product WHERE id = ?"
-    pool.query(query, [id], (err, data) => {
+    const query = "DELETE FROM product WHERE id = ?";
+    await pool.query(query, [id], (err, data) => {
         if (err) return res.json(err);
         res.json("Product has been removed successfully");
     })
