@@ -1,19 +1,12 @@
 import express from "express";
 import cors from 'cors'
-import multer from 'multer';
+import multer from "multer";
 import { PORT } from "./config.js";
-import { pool } from "./db.js"
+import { pool } from "./db.js";
+import { storage } from './multerConfig.js'
 
 const app = express()
 
-const imgConfig = multer.diskStorage({
-    destination: (req, file, callback) => {
-        callback(null, "./uploads");
-    },
-    filename: (rea, file, callback) => {
-        callback(null, `image-${Date.now()}.${file.originalName}`)
-    }
-});
 
 const isImage = (req, file, callback) => {
     if (file.mimetype.startsWith("images")) {
@@ -24,13 +17,13 @@ const isImage = (req, file, callback) => {
 };
 
 const upload = multer({
-    storage: imgConfig,
+    storage: storage,
     fileFilter: isImage
 });
 
 app.use(express.json());
 app.use(cors({ origin: ['http://localhost:5173'], }))
-
+app.use("/files", express.static("uploads"));
 
 
 app.get("/", async (_req, res) => {
@@ -55,8 +48,9 @@ app.get("/products", async (_req, res) => {
     res.json(row);
 })
 
-app.post("/create-product", upload.single("image"), async (req, res) => {
-    const { title, description, image } = req.body;
+app.post("/create-product", upload.single("file"), async (req, res) => {
+    const { image } = req.file.filename;
+    const { title, description } = req.body;
     const sql = 'INSERT INTO product (TITLE, DESCRIPTION, IMAGE) VALUES (?, ?, ?)';
     const result = await pool.query(sql, [title, description, image]);
     res.json(result);
